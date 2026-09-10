@@ -682,6 +682,9 @@ body.light-theme .btn-p{color:#fff}
 body.rgb-mode{animation:rgbShift 8s linear infinite}
 @keyframes rgbShift{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
 
+/* === شیمر برای نوار سهمیه === */
+@keyframes shimmer{0%{transform:translateX(100%)}100%{transform:translateX(-200%)}}
+
 /* === Flatpickr === */
 .flatpickr-calendar{background:var(--bg-surface-2) !important;backdrop-filter:blur(40px) !important;-webkit-backdrop-filter:blur(40px) !important;border:1px solid var(--border-strong) !important;border-radius:14px !important;box-shadow:var(--shadow) !important}
 .flatpickr-calendar .flatpickr-months .flatpickr-month{color:var(--t1) !important}
@@ -842,6 +845,7 @@ body.rgb-mode{animation:rgbShift 8s linear infinite}
   <div class="nav-wrap">
     <div class="nav-it on" data-pg="dashboard"><i class="ti ti-layout-dashboard"></i> <span id="nav-home">خانه</span></div>
     <div class="nav-it" data-pg="users"><i class="ti ti-users"></i> <span id="nav-users">کاربران</span></div>
+    <div class="nav-it" data-pg="quota"><i class="ti ti-gauge"></i> <span id="nav-quota">مصرف مجاز</span></div>
     <div class="nav-it" data-pg="inbound"><i class="ti ti-plug"></i> <span id="nav-inbound">اینباند</span></div>
     <div class="nav-it" data-pg="connections"><i class="ti ti-plug-connected"></i> <span id="nav-connections">اتصالات</span></div>
     <div class="nav-it" data-pg="settings"><i class="ti ti-settings"></i> <span id="nav-settings">تنظیمات</span></div>
@@ -854,6 +858,7 @@ body.rgb-mode{animation:rgbShift 8s linear infinite}
 <div class="bottom-nav" id="bottomNav">
   <button class="nav-item active" data-pg="dashboard" onclick="navTo('dashboard')"><i class="ti ti-layout-dashboard"></i><span id="b-home">خانه</span></button>
   <button class="nav-item" data-pg="users" onclick="navTo('users')"><i class="ti ti-users"></i><span id="b-users">کاربران</span></button>
+  <button class="nav-item" data-pg="quota" onclick="navTo('quota')"><i class="ti ti-gauge"></i><span id="b-quota">سهمیه</span></button>
   <button class="nav-item" data-pg="inbound" onclick="navTo('inbound')"><i class="ti ti-plug"></i><span id="b-inbound">اینباند</span></button>
   <button class="nav-item" data-pg="settings" onclick="navTo('settings')"><i class="ti ti-settings"></i><span id="b-settings">تنظیمات</span></button>
 </div>
@@ -916,6 +921,83 @@ body.rgb-mode{animation:rgbShift 8s linear infinite}
   <div style="background:var(--bg-card);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border:1px solid var(--border-subtle);border-radius:var(--radius);overflow:hidden">
     <div style="overflow-x:auto;"><table class="users-table" id="users-table"><thead><tr><th id="th-name">نام</th><th id="th-account">اکانت</th><th id="th-status">وضعیت</th><th id="th-usage">مصرف دیتا</th><th id="th-duration">مدت</th><th style="text-align:center;" id="th-actions">عملیات</th></tr></thead><tbody id="users-tbody"><tr><td colspan="6" style="text-align:center;padding:30px;color:var(--t3);" id="no-users">هیچ کاربری وجود ندارد</td></tr></tbody></table></div>
     <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-top:1px solid var(--border-subtle);flex-wrap:wrap;gap:8px;"><div style="font-size:10px;color:var(--t3);"><span id="users-count-label">۰ کاربر</span></div><div style="display:flex;gap:6px;"><button class="btn btn-p btn-sm" onclick="openModal('modal-user')"><i class="ti ti-plus"></i> <span id="add-user-btn">افزودن کاربر جدید</span></button></div></div>
+  </div>
+</section>
+
+<!-- صفحه مصرف مجاز -->
+<section class="pg" id="pg-quota">
+  <div class="topbar"><div><div class="tb-title"><i class="ti ti-gauge"></i> <span id="quota-title">مصرف مجاز</span></div><div class="tb-sub" id="quota-sub">مصرف کل سرور نسبت به سقف مجاز</div></div><div class="tb-right"><button class="btn btn-sm btn-o" onclick="loadQuota()"><i class="ti ti-refresh"></i></button></div></div>
+  
+  <!-- کارت اصلی سهمیه -->
+  <div class="settings-card" style="max-width:none">
+    <div class="title"><i class="ti ti-chart-dots"></i> <span id="quota-overview-title">نمای کلی مصرف</span></div>
+    
+    <!-- اعداد بزرگ -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px">
+      <div style="text-align:center;padding:18px 10px;background:rgba(0,240,255,0.04);border-radius:12px;border:1px solid var(--border-subtle)">
+        <div style="font-size:11px;color:var(--t3);font-weight:700;letter-spacing:0.5px;text-transform:uppercase" id="q-used-label">مصرف شده</div>
+        <div style="font-size:28px;font-weight:900;color:var(--cyan);margin-top:6px;font-family:monospace;text-shadow:0 0 12px rgba(0,240,255,0.4)" id="q-used-value">0 GB</div>
+      </div>
+      <div style="text-align:center;padding:18px 10px;background:rgba(255,46,154,0.04);border-radius:12px;border:1px solid var(--border-subtle)">
+        <div style="font-size:11px;color:var(--t3);font-weight:700;letter-spacing:0.5px;text-transform:uppercase" id="q-limit-label">سقف مجاز</div>
+        <div style="font-size:28px;font-weight:900;color:var(--magenta);margin-top:6px;font-family:monospace;text-shadow:0 0 12px rgba(255,46,154,0.4)" id="q-limit-value">100 GB</div>
+      </div>
+      <div style="text-align:center;padding:18px 10px;background:rgba(16,255,160,0.04);border-radius:12px;border:1px solid var(--border-subtle)">
+        <div style="font-size:11px;color:var(--t3);font-weight:700;letter-spacing:0.5px;text-transform:uppercase" id="q-remaining-label">باقی مانده</div>
+        <div style="font-size:28px;font-weight:900;color:var(--green-t);margin-top:6px;font-family:monospace;text-shadow:0 0 12px rgba(16,255,160,0.4)" id="q-remaining-value">100 GB</div>
+      </div>
+    </div>
+    
+    <!-- نوار پیشرفت خطی اصلی -->
+    <div style="margin-top:18px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-size:12px;font-weight:700;color:var(--t1)" id="q-progress-label">میزان مصرف</span>
+        <span style="font-size:14px;font-weight:900;color:var(--cyan);font-family:monospace" id="q-percent">0.0%</span>
+      </div>
+      <div id="q-progress-bar-bg" style="height:24px;border-radius:14px;background:rgba(0,240,255,0.06);overflow:hidden;border:1px solid var(--border-subtle);position:relative">
+        <div id="q-progress-fill" style="height:100%;border-radius:14px;background:linear-gradient(90deg,#00f0ff,#7b2ff7,#ff2e9a);background-size:200% 200%;animation:gradientFlow 5s ease infinite;width:0%;transition:width 1.2s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 0 15px rgba(0,240,255,0.5);position:relative">
+          <div style="position:absolute;top:0;right:0;width:40px;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);animation:shimmer 2s linear infinite"></div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:9px;color:var(--t3)">
+        <span>0 GB</span>
+        <span id="q-mid-label">50 GB</span>
+        <span id="q-end-label">100 GB</span>
+      </div>
+    </div>
+    
+    <!-- هشدار تموم شدن سهمیه -->
+    <div id="q-alert" style="display:none;margin-top:18px;padding:16px 18px;background:rgba(255,77,109,0.12);border:1px solid rgba(255,77,109,0.35);border-radius:12px;align-items:center;gap:10px;animation:pulseAnim 2s infinite;box-shadow:0 0 25px rgba(255,77,109,0.2)">
+      <i class="ti ti-alert-octagon" style="font-size:24px;color:var(--red-t);flex-shrink:0"></i>
+      <div>
+        <div style="font-size:14px;font-weight:800;color:var(--red-t)" id="q-alert-title">⚠️ مصرف مجاز شما تمام شد</div>
+        <div style="font-size:10px;color:var(--t2);margin-top:3px" id="q-alert-desc">لطفا با مدیر سیستم تماس بگیرید یا سهمیه را افزایش دهید</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- توزیع مصرف بین کاربران -->
+  <div style="background:var(--bg-card);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:16px 18px;margin-top:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <span style="font-size:13px;font-weight:800;color:var(--t1);display:flex;align-items:center;gap:6px"><i class="ti ti-users" style="color:var(--cyan)"></i> <span id="q-users-title">مصرف به تفکیک کاربران</span></span>
+      <span style="font-size:10px;color:var(--t3)" id="q-users-sub">برترین مصرف‌کنندگان</span>
+    </div>
+    <div id="q-users-list" style="display:flex;flex-direction:column;gap:10px">
+      <div class="empty"><i class="ti ti-users"></i><p style="font-size:10px">در حال بارگذاری...</p></div>
+    </div>
+  </div>
+  
+  <!-- نمودار مصرف تجمعی -->
+  <div class="chart-section" style="margin-top:14px">
+    <div class="chart-header">
+      <div>
+        <span class="chart-title"><i class="ti ti-chart-line"></i> <span id="q-cumulative-title">مصرف تجمعی</span></span>
+        <span class="chart-sub" id="q-cumulative-sub">انباشت مصرف نسبت به سقف مجاز</span>
+      </div>
+    </div>
+    <div style="position:relative;height:200px;width:100%">
+      <canvas id="quotaChart"></canvas>
+    </div>
   </div>
 </section>
 
@@ -1010,7 +1092,16 @@ const translations = {
   fa: {
     nav_home: 'خانه', nav_users: 'کاربران', nav_inbound: 'اینباند',
     nav_connections: 'اتصالات', nav_settings: 'تنظیمات', nav_logs: 'لاگ‌ها',
-    nav_backup: 'بکاپ', nav_logout: 'خروج',
+    nav_backup: 'بکاپ', nav_logout: 'خروج', nav_quota: 'مصرف مجاز',
+    b_quota: 'سهمیه',
+    quota_title: 'مصرف مجاز', quota_sub: 'مصرف کل سرور نسبت به سقف مجاز',
+    quota_overview_title: 'نمای کلی مصرف',
+    q_used_label: 'مصرف شده', q_limit_label: 'سقف مجاز', q_remaining_label: 'باقی مانده',
+    q_progress_label: 'میزان مصرف',
+    q_alert_title: '⚠️ مصرف مجاز شما تمام شد',
+    q_alert_desc: 'لطفا با مدیر سیستم تماس بگیرید یا سهمیه را افزایش دهید',
+    q_users_title: 'مصرف به تفکیک کاربران', q_users_sub: 'برترین مصرف‌کنندگان',
+    q_cumulative_title: 'مصرف تجمعی', q_cumulative_sub: 'انباشت مصرف نسبت به سقف مجاز',
     dash_title: 'خانه', dash_add_user: 'کاربر',
     s_traffic: 'ترافیک', s_requests: 'درخواست‌ها', s_uptime: 'آپتایم',
     s_disk: 'فضای دیسک', s_speed: 'سرعت', s_users: 'کاربران',
@@ -1053,7 +1144,16 @@ const translations = {
   en: {
     nav_home: 'Home', nav_users: 'Users', nav_inbound: 'Inbound',
     nav_connections: 'Connections', nav_settings: 'Settings', nav_logs: 'Logs',
-    nav_backup: 'Backup', nav_logout: 'Logout',
+    nav_backup: 'Backup', nav_logout: 'Logout', nav_quota: 'Quota',
+    b_quota: 'Quota',
+    quota_title: 'Allowed Quota', quota_sub: 'Total server usage vs allowed limit',
+    quota_overview_title: 'Usage Overview',
+    q_used_label: 'Used', q_limit_label: 'Allowed Limit', q_remaining_label: 'Remaining',
+    q_progress_label: 'Usage Progress',
+    q_alert_title: '⚠️ Your allowed quota has been exhausted',
+    q_alert_desc: 'Please contact the administrator or increase the quota',
+    q_users_title: 'Per-user usage', q_users_sub: 'Top consumers',
+    q_cumulative_title: 'Cumulative Usage', q_cumulative_sub: 'Accumulated usage vs allowed limit',
     dash_title: 'Dashboard', dash_add_user: 'User',
     s_traffic: 'Traffic', s_requests: 'Requests', s_uptime: 'Uptime',
     s_disk: 'Disk', s_speed: 'Speed', s_users: 'Users',
@@ -1197,11 +1297,27 @@ function updateUITexts() {
   document.getElementById('nav-logs').textContent = t.nav_logs;
   document.getElementById('nav-backup').textContent = t.nav_backup;
   document.getElementById('nav-logout').textContent = t.nav_logout;
+  document.getElementById('nav-quota').textContent = t.nav_quota;
   
   document.getElementById('b-home').textContent = t.nav_home;
   document.getElementById('b-users').textContent = t.nav_users;
+  document.getElementById('b-quota').textContent = t.b_quota;
   document.getElementById('b-inbound').textContent = t.nav_inbound;
   document.getElementById('b-settings').textContent = t.nav_settings;
+  
+  document.getElementById('quota-title').textContent = t.quota_title;
+  document.getElementById('quota-sub').textContent = t.quota_sub;
+  document.getElementById('quota-overview-title').textContent = t.quota_overview_title;
+  document.getElementById('q-used-label').textContent = t.q_used_label;
+  document.getElementById('q-limit-label').textContent = t.q_limit_label;
+  document.getElementById('q-remaining-label').textContent = t.q_remaining_label;
+  document.getElementById('q-progress-label').textContent = t.q_progress_label;
+  document.getElementById('q-alert-title').textContent = t.q_alert_title;
+  document.getElementById('q-alert-desc').textContent = t.q_alert_desc;
+  document.getElementById('q-users-title').textContent = t.q_users_title;
+  document.getElementById('q-users-sub').textContent = t.q_users_sub;
+  document.getElementById('q-cumulative-title').textContent = t.q_cumulative_title;
+  document.getElementById('q-cumulative-sub').textContent = t.q_cumulative_sub;
   
   document.getElementById('dash-title').textContent = t.dash_title;
   document.getElementById('dash-add-user').textContent = t.dash_add_user;
@@ -1348,6 +1464,7 @@ function navTo(name) {
   const loaders = {
     dashboard: loadDashboard,
     users: loadUsers,
+    quota: loadQuota,
     inbound: loadInbound,
     connections: loadConnections,
     logs: loadLogs,
@@ -1377,28 +1494,67 @@ async function loadChart(period) {
     document.getElementById(btnMap[period]).className = 'btn btn-sm btn-pur';
   }
   
+  let days = 7;
+  if (period === '30d') days = 30;
+  if (period === '90d') days = 90;
+  
   try {
-    const r = await authF('/api/stats');
-    const data = await r.json();
-    const hourly = data.hourly || {};
+    // تلاش برای گرفتن داده‌های آماری
+    let dailyData = {};
+    let totalUsedBytes = 0;
     
-    const dailyData = {};
-    let days = 7;
-    if (period === '30d') days = 30;
-    if (period === '90d') days = 90;
+    try {
+      const r = await authF('/api/stats');
+      const data = await r.json();
+      const hourly = data.hourly || {};
+      
+      for (const [key, bytes] of Object.entries(hourly)) {
+        // key می‌تونه YYYY-MM-DD:HH یا YYYY-MM-DD باشه
+        const dayKey = key.split(':')[0] || key;
+        if (!dailyData[dayKey]) dailyData[dayKey] = 0;
+        dailyData[dayKey] += bytes || 0;
+        totalUsedBytes += bytes || 0;
+      }
+    } catch(e) { console.warn('stats API unavailable, using fallback', e); }
     
-    for (const [hour, bytes] of Object.entries(hourly)) {
-      const [h] = hour.split(':');
-      const date = new Date();
-      date.setHours(parseInt(h), 0, 0, 0);
-      const key = date.toISOString().split('T')[0];
-      if (!dailyData[key]) dailyData[key] = 0;
-      dailyData[key] += bytes;
+    // اگر داده‌ای نداشتیم، از /api/links برای ساخت داده روزانه استفاده می‌کنیم
+    if (Object.keys(dailyData).length === 0) {
+      try {
+        const r2 = await authF('/api/links');
+        const usersData = await r2.json();
+        const links = usersData.links || [];
+        const today = new Date();
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - days + 1);
+        
+        links.forEach(l => {
+          if (l.created_at) {
+            try {
+              const cDate = new Date(l.created_at);
+              if (cDate >= startDate) {
+                const dayKey = cDate.toISOString().split('T')[0];
+                if (!dailyData[dayKey]) dailyData[dayKey] = 0;
+                const dailyAvg = (l.used_bytes || 0) / Math.max(1, days);
+                dailyData[dayKey] += dailyAvg;
+              }
+            } catch(e) {}
+          }
+          totalUsedBytes += l.used_bytes || 0;
+        });
+      } catch(e) { console.warn('links API fallback failed', e); }
     }
     
-    const sortedKeys = Object.keys(dailyData).sort();
-    const lastDays = sortedKeys.slice(-days);
+    // اگر باز هم خالی بود، داده‌های ثابت نمایش بدیم
+    if (Object.keys(dailyData).length === 0) {
+      // داده‌های نمونه برای نمایش نمودار خالی
+      for (let i = 0; i < days; i++) {
+        const d = new Date();
+        d.setDate(d.getDate() - (days - 1 - i));
+        dailyData[d.toISOString().split('T')[0]] = 0;
+      }
+    }
     
+    // ساخت آرایه نهایی برای روزهای اخیر
     const labels = [];
     const values = [];
     const startDate = new Date();
@@ -1423,7 +1579,6 @@ async function loadChart(period) {
     if (trafficChart) { trafficChart.destroy(); }
     
     const ctx = document.getElementById('trafficChart').getContext('2d');
-    // Gradient fill
     const gradient = ctx.createLinearGradient(0, 0, 0, 200);
     gradient.addColorStop(0, 'rgba(0, 240, 255, 0.4)');
     gradient.addColorStop(0.5, 'rgba(123, 47, 247, 0.2)');
@@ -1488,7 +1643,7 @@ async function loadChart(period) {
         interaction: { intersect: false, mode: 'index' }
       }
     });
-  } catch(e) { console.error(e); }
+  } catch(e) { console.error('loadChart error', e); }
 }
 
 // ===== بارگذاری داشبورد =====
@@ -1520,6 +1675,228 @@ async function loadDashboard() {
     
     loadChart(chartPeriod);
   } catch(e) { console.error(e); }
+}
+
+// ===== بارگذاری مصرف مجاز (سهمیه کل سرور) =====
+let quotaChart = null;
+const SERVER_QUOTA_LIMIT_GB = 100;  // سقف مجاز پیش‌فرض ۱۰۰ گیگابایت
+
+async function loadQuota() {
+  try {
+    // گرفتن دیتای کل سرور
+    let totalUsedBytes = 0;
+    let linksList = [];
+    
+    try {
+      const r = await authF('/api/links');
+      const data = await r.json();
+      linksList = data.links || [];
+      linksList.forEach(l => { totalUsedBytes += (l.used_bytes || 0); });
+    } catch(e) { console.warn('links API failed for quota', e); }
+    
+    // گرفتن ترافیک کل از داشبورد (اگه قابل دسترسی بود)
+    try {
+      const r2 = await authF('/api/dashboard/stats');
+      const data2 = await r2.json();
+      if (data2.traffic && data2.traffic.total) {
+        // اگه دیتای ترافیک کل بود، از حداکثر اون و مجموع لینک‌ها استفاده می‌کنیم
+        totalUsedBytes = Math.max(totalUsedBytes, data2.traffic.total);
+      }
+    } catch(e) {}
+    
+    const limitBytes = SERVER_QUOTA_LIMIT_GB * 1024 * 1024 * 1024;
+    const usedBytes = totalUsedBytes;
+    const remainingBytes = Math.max(0, limitBytes - usedBytes);
+    const percent = Math.min(100, (usedBytes / limitBytes) * 100);
+    const usedGB = usedBytes / (1024 * 1024 * 1024);
+    const remainingGB = remainingBytes / (1024 * 1024 * 1024);
+    const isExhausted = usedBytes >= limitBytes;
+    const isWarning = percent >= 80 && !isExhausted;
+    
+    // آپدیت اعداد
+    document.getElementById('q-used-value').textContent = usedGB.toFixed(2) + ' GB';
+    document.getElementById('q-limit-value').textContent = SERVER_QUOTA_LIMIT_GB + ' GB';
+    document.getElementById('q-remaining-value').textContent = remainingGB.toFixed(2) + ' GB';
+    document.getElementById('q-percent').textContent = percent.toFixed(1) + '%';
+    document.getElementById('q-mid-label').textContent = (SERVER_QUOTA_LIMIT_GB / 2) + ' GB';
+    document.getElementById('q-end-label').textContent = SERVER_QUOTA_LIMIT_GB + ' GB';
+    
+    // آپدیت نوار پیشرفت
+    const fill = document.getElementById('q-progress-fill');
+    fill.style.width = percent + '%';
+    
+    // اگه به سقف رسید، رنگ قرمز و نمایش هشدار
+    const barBg = document.getElementById('q-progress-bar-bg');
+    const percentEl = document.getElementById('q-percent');
+    const alertBox = document.getElementById('q-alert');
+    const remainingEl = document.getElementById('q-remaining-value');
+    
+    if (isExhausted) {
+      fill.style.background = 'linear-gradient(90deg,#ff4d6d,#ff2e9a,#ff4d6d)';
+      fill.style.boxShadow = '0 0 25px rgba(255,77,109,0.6)';
+      barBg.style.borderColor = 'rgba(255,77,109,0.5)';
+      barBg.style.background = 'rgba(255,77,109,0.08)';
+      percentEl.style.color = 'var(--red-t)';
+      percentEl.textContent = (currentLang === 'fa' ? 'تمام شد! ' : 'Exhausted! ') + percent.toFixed(1) + '%';
+      remainingEl.style.color = 'var(--red-t)';
+      remainingEl.textContent = '0 GB';
+      alertBox.style.display = 'flex';
+    } else if (isWarning) {
+      fill.style.background = 'linear-gradient(90deg,#ffb800,#ff8800,#ff2e9a)';
+      fill.style.boxShadow = '0 0 20px rgba(255,184,0,0.5)';
+      barBg.style.borderColor = 'rgba(255,184,0,0.4)';
+      barBg.style.background = 'rgba(255,184,0,0.06)';
+      percentEl.style.color = 'var(--amber-t)';
+      remainingEl.style.color = 'var(--amber-t)';
+      alertBox.style.display = 'none';
+    } else {
+      fill.style.background = 'linear-gradient(90deg,#00f0ff,#7b2ff7,#ff2e9a)';
+      fill.style.boxShadow = '0 0 15px rgba(0,240,255,0.5)';
+      barBg.style.borderColor = 'var(--border-subtle)';
+      barBg.style.background = 'rgba(0,240,255,0.06)';
+      percentEl.style.color = 'var(--cyan)';
+      remainingEl.style.color = 'var(--green-t)';
+      alertBox.style.display = 'none';
+    }
+    
+    // نمایش توزیع مصرف بین کاربران (برترین‌ها)
+    const usersList = document.getElementById('q-users-list');
+    if (!linksList.length) {
+      usersList.innerHTML = '<div class="empty"><i class="ti ti-users"></i><p style="font-size:10px">' + (currentLang === 'fa' ? 'هیچ کاربری وجود ندارد' : 'No users') + '</p></div>';
+    } else {
+      // مرتب‌سازی بر اساس مصرف و انتخاب ۵ کاربر برتر
+      const top = linksList.slice().sort((a, b) => (b.used_bytes||0) - (a.used_bytes||0)).slice(0, 5);
+      usersList.innerHTML = top.map((l, idx) => {
+        const used = l.used_bytes || 0;
+        const limit = l.limit_bytes || 0;
+        const pct = limit > 0 ? Math.min(100, (used / limit) * 100) : 0;
+        const usedFmt = fmtB(used);
+        const limitFmt = limit === 0 ? '∞' : fmtB(limit);
+        const avatarLetter = (l.label || 'U')[0].toUpperCase();
+        const isOver = limit > 0 && used >= limit;
+        const barColor = isOver ? 'linear-gradient(90deg,#ff4d6d,#ff2e9a)' : 
+                         pct >= 80 ? 'linear-gradient(90deg,#ffb800,#ff8800)' :
+                         'linear-gradient(90deg,#00f0ff,#7b2ff7)';
+        return `<div style="background:rgba(0,240,255,0.03);border:1px solid var(--border-subtle);border-radius:10px;padding:10px 12px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#000;flex-shrink:0">${avatarLetter}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:11px;font-weight:700;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(l.label)}</div>
+              <div style="font-size:8px;color:var(--t3);font-family:monospace;margin-top:2px">${l.uuid.slice(0,8)}…</div>
+            </div>
+            <div style="text-align:left;flex-shrink:0">
+              <div style="font-size:11px;font-weight:800;color:${isOver?'var(--red-t)':(pct>=80?'var(--amber-t)':'var(--cyan)')};font-family:monospace">${usedFmt} / ${limitFmt}</div>
+              <div style="font-size:8px;color:var(--t3);margin-top:1px">${pct.toFixed(1)}% ${isOver?(currentLang==='fa'?'تمام شد':'exhausted'):''}</div>
+            </div>
+          </div>
+          <div style="height:5px;border-radius:3px;background:rgba(0,240,255,0.05);overflow:hidden">
+            <div style="height:100%;border-radius:3px;background:${barColor};width:${pct}%;transition:width .8s ease;box-shadow:0 0 6px rgba(0,240,255,0.3)"></div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+    
+    // ساخت نمودار مصرف تجمعی
+    drawQuotaChart(usedGB, SERVER_QUOTA_LIMIT_GB, isExhausted, isWarning);
+    
+  } catch(e) { console.error('loadQuota error', e); }
+}
+
+function drawQuotaChart(usedGB, limitGB, isExhausted, isWarning) {
+  try {
+    if (quotaChart) { quotaChart.destroy(); }
+    
+    const ctx = document.getElementById('quotaChart').getContext('2d');
+    
+    // ساخت داده‌های تجمعی برای ۱۴ روز اخیر (با فرض توزیع یکنواخت)
+    const days = 14;
+    const labels = [];
+    const cumulativeData = [];
+    const dailyAvg = usedGB / days;
+    
+    for (let i = 0; i < days; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() - (days - 1 - i));
+      labels.push(d.toLocaleDateString(currentLang === 'fa' ? 'fa-IR' : 'en-US', { weekday: 'short', day: 'numeric' }));
+      cumulativeData.push(Number((dailyAvg * (i + 1)).toFixed(2)));
+    }
+    
+    const lineColor = isExhausted ? '#ff4d6d' : isWarning ? '#ffb800' : '#00f0ff';
+    const fillColor = isExhausted ? 'rgba(255,77,109,0.3)' : isWarning ? 'rgba(255,184,0,0.2)' : 'rgba(0,240,255,0.2)';
+    
+    const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+    gradient.addColorStop(0, fillColor);
+    gradient.addColorStop(1, 'rgba(0,0,0,0.02)');
+    
+    quotaChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: currentLang === 'fa' ? 'مصرف تجمعی (GB)' : 'Cumulative (GB)',
+            data: cumulativeData,
+            borderColor: lineColor,
+            backgroundColor: gradient,
+            borderWidth: 2.5,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: lineColor,
+            pointBorderColor: '#0a0e2a',
+            pointBorderWidth: 2,
+            pointRadius: 3,
+            pointHoverRadius: 6
+          },
+          {
+            label: currentLang === 'fa' ? 'سقف مجاز' : 'Allowed Limit',
+            data: labels.map(() => limitGB),
+            borderColor: isExhausted ? '#ff4d6d' : '#ff2e9a',
+            borderWidth: 2,
+            borderDash: [6, 4],
+            fill: false,
+            pointRadius: 0,
+            tension: 0
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+            labels: { color: '#94a3b8', font: { size: 10 }, boxWidth: 12, padding: 8 }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(10, 14, 35, 0.95)',
+            borderColor: lineColor,
+            borderWidth: 1,
+            titleColor: lineColor,
+            bodyColor: '#e8efff',
+            padding: 10,
+            cornerRadius: 8,
+            callbacks: {
+              label: function(context) { return context.dataset.label + ': ' + context.parsed.y + ' GB'; }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            suggestedMax: limitGB,
+            ticks: { color: '#64748b', font: { size: 9 }, callback: function(value) { return value + ' GB'; } },
+            grid: { color: 'rgba(0, 240, 255, 0.05)' }
+          },
+          x: {
+            ticks: { color: '#64748b', font: { size: 9 } },
+            grid: { display: false }
+          }
+        },
+        interaction: { intersect: false, mode: 'index' }
+      }
+    });
+  } catch(e) { console.error('drawQuotaChart error', e); }
 }
 
 // ===== بارگذاری اینباند =====
@@ -1914,11 +2291,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadUsers();
   loadConnections();
   loadLogs();
+  loadQuota();
   
   setInterval(() => {
     if (document.getElementById('pg-dashboard').classList.contains('on')) loadDashboard();
     if (document.getElementById('pg-connections').classList.contains('on')) loadConnections();
     if (document.getElementById('pg-users').classList.contains('on')) loadUsers();
+    if (document.getElementById('pg-quota').classList.contains('on')) loadQuota();
   }, 10000);
 });
 </script>
