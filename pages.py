@@ -685,6 +685,175 @@ body.rgb-mode{animation:rgbShift 8s linear infinite}
 /* === شیمر برای نوار سهمیه === */
 @keyframes shimmer{0%{transform:translateX(100%)}100%{transform:translateX(-200%)}}
 
+/* ========================================
+   ✦ WTF Factor #1: Command Palette (Ctrl+K) ✦
+   ======================================== */
+.cmdk-overlay{display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);align-items:flex-start;justify-content:center;padding-top:12vh}
+.cmdk-overlay.open{display:flex;animation:cmdkFade .2s ease}
+@keyframes cmdkFade{from{opacity:0}to{opacity:1}}
+.cmdk-box{width:90%;max-width:640px;background:var(--bg-surface-2);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border:1px solid var(--border-strong);border-radius:16px;overflow:hidden;box-shadow:0 30px 100px rgba(0,0,0,0.6),0 0 60px rgba(0,240,255,0.15);animation:cmdkIn .35s var(--transition)}
+@keyframes cmdkIn{from{opacity:0;transform:translateY(-30px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.cmdk-input-wrap{padding:18px 20px;border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;gap:12px}
+.cmdk-input-wrap i{color:var(--cyan);font-size:20px;filter:drop-shadow(0 0 6px var(--cyan))}
+.cmdk-input{flex:1;background:transparent;border:none;outline:none;color:var(--t1);font-family:inherit;font-size:16px;font-weight:600}
+.cmdk-input::placeholder{color:var(--t3)}
+.cmdk-kbd{font-size:10px;color:var(--t3);background:rgba(255,255,255,0.05);padding:3px 8px;border-radius:6px;border:1px solid var(--border-subtle);font-family:monospace}
+.cmdk-list{max-height:400px;overflow-y:auto;padding:8px}
+.cmdk-list::-webkit-scrollbar{width:4px}
+.cmdk-list::-webkit-scrollbar-track{background:transparent}
+.cmdk-list::-webkit-scrollbar-thumb{background:var(--cyan-soft);border-radius:4px}
+.cmdk-category{font-size:10px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:1px;padding:8px 12px 4px;text-shadow:0 0 6px rgba(0,240,255,0.4)}
+.cmdk-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:all .15s;color:var(--t1);font-size:13px;font-weight:600}
+.cmdk-item:hover,.cmdk-item.active{background:rgba(0,240,255,0.08);color:var(--cyan)}
+.cmdk-item.active{box-shadow:inset 3px 0 0 var(--cyan)}
+.cmdk-item .cmdk-icon{width:32px;height:32px;border-radius:8px;background:rgba(0,240,255,0.05);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:var(--cyan)}
+.cmdk-item .cmdk-text{flex:1;min-width:0}
+.cmdk-item .cmdk-text .cmdk-title{font-size:13px;font-weight:700;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmdk-item .cmdk-text .cmdk-desc{font-size:10px;color:var(--t3);margin-top:1px}
+.cmdk-item .cmdk-shortcut{font-size:9px;color:var(--t3);background:rgba(255,255,255,0.05);padding:3px 6px;border-radius:5px;border:1px solid var(--border-subtle);font-family:monospace}
+.cmdk-empty{text-align:center;padding:30px;color:var(--t3);font-size:12px}
+.cmdk-empty i{font-size:32px;opacity:0.3;display:block;margin-bottom:8px}
+
+/* ========================================
+   ✦ WTF Factor #2: Counter Up Animation ✦
+   ======================================== */
+.counter-num{display:inline-block;transition:color .3s}
+.counter-num.counting{color:var(--cyan);text-shadow:0 0 12px rgba(0,240,255,0.6)}
+
+/* ========================================
+   ✦ WTF Factor #3: World Map with Servers ✦
+   ======================================== */
+.world-map-card{background:var(--bg-card);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:18px 20px;margin-top:14px;position:relative;overflow:hidden}
+.world-map-card .map-title{font-size:14px;font-weight:800;color:var(--t1);display:flex;align-items:center;gap:6px;margin-bottom:14px}
+.world-map-card .map-title i{color:var(--cyan);filter:drop-shadow(0 0 6px var(--cyan))}
+.world-map-svg-wrap{position:relative;width:100%;height:240px;background:radial-gradient(ellipse at center,rgba(0,240,255,0.04),transparent 70%);border-radius:12px;overflow:hidden;border:1px solid var(--border-subtle)}
+.world-map-svg-wrap svg{width:100%;height:100%;display:block}
+.server-marker{position:absolute;transform:translate(-50%,-50%);cursor:pointer;transition:all .3s var(--transition);z-index:2}
+.server-marker .server-dot{width:10px;height:10px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan),0 0 0 0 rgba(0,240,255,0.7);animation:serverPulse 2s infinite}
+.server-marker.active .server-dot{background:var(--green-t);box-shadow:0 0 15px var(--green-t)}
+.server-marker:hover{transform:translate(-50%,-50%) scale(1.4)}
+.server-marker:hover .server-tooltip{opacity:1;transform:translate(-50%,-100%)}
+.server-tooltip{position:absolute;left:50%;bottom:100%;transform:translate(-50%,-8px);background:var(--bg-surface-2);backdrop-filter:blur(20px);border:1px solid var(--border-strong);border-radius:8px;padding:8px 12px;font-size:10px;white-space:nowrap;opacity:0;pointer-events:none;transition:all .25s;z-index:10;color:var(--t1);font-weight:600;box-shadow:0 8px 25px rgba(0,0,0,0.4)}
+.server-tooltip .server-name{color:var(--cyan);font-weight:800;font-size:11px;margin-bottom:2px}
+.server-tooltip .server-stat{font-size:9px;color:var(--t3)}
+@keyframes serverPulse{0%{box-shadow:0 0 12px var(--cyan),0 0 0 0 rgba(0,240,255,0.7)}70%{box-shadow:0 0 12px var(--cyan),0 0 0 18px rgba(0,240,255,0)}100%{box-shadow:0 0 12px var(--cyan),0 0 0 0 rgba(0,240,255,0)}}
+.server-connection{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.server-connection line{stroke:url(#connGradient);stroke-width:1;opacity:0.4;stroke-dasharray:4 4;animation:dashMove 30s linear infinite}
+@keyframes dashMove{to{stroke-dashoffset:-200}}
+
+/* ========================================
+   ✦ WTF Factor #4: Speedometer Gauge ✦
+   ======================================== */
+.speed-gauge-card{background:var(--bg-card);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:18px 20px;margin-top:14px}
+.speed-gauge-title{font-size:13px;font-weight:800;color:var(--t1);display:flex;align-items:center;gap:6px;margin-bottom:12px}
+.speed-gauge-title i{color:var(--cyan);filter:drop-shadow(0 0 6px var(--cyan))}
+.gauge-wrap{position:relative;width:100%;height:180px;display:flex;align-items:center;justify-content:center}
+.gauge-svg{width:100%;max-width:280px;height:100%}
+.gauge-arc-bg{fill:none;stroke:rgba(0,240,255,0.05);stroke-width:12;stroke-linecap:round}
+.gauge-arc-fg{fill:none;stroke:url(#gaugeGradient);stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset .8s cubic-bezier(0.34,1.56,0.64,1);filter:drop-shadow(0 0 8px rgba(0,240,255,0.5))}
+.gauge-needle{transform-origin:center;transition:transform .8s cubic-bezier(0.34,1.56,0.64,1)}
+.gauge-value{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none}
+.gauge-num{font-size:30px;font-weight:900;color:var(--cyan);font-family:monospace;text-shadow:0 0 14px rgba(0,240,255,0.5);line-height:1}
+.gauge-label{font-size:10px;color:var(--t3);margin-top:4px;letter-spacing:0.5px}
+
+/* ========================================
+   ✦ WTF Factor #5: Real-time Activity Feed ✦
+   ======================================== */
+.activity-feed-card{background:var(--bg-card);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:14px 16px;margin-top:14px;max-height:280px;overflow-y:auto}
+.activity-feed-card::-webkit-scrollbar{width:4px}
+.activity-feed-card::-webkit-scrollbar-track{background:transparent}
+.activity-feed-card::-webkit-scrollbar-thumb{background:var(--cyan-soft);border-radius:4px}
+.activity-feed-title{font-size:13px;font-weight:800;color:var(--t1);display:flex;align-items:center;gap:6px;margin-bottom:10px;position:sticky;top:0;background:var(--bg-card);backdrop-filter:blur(20px);padding-bottom:6px}
+.activity-feed-title i{color:var(--cyan);filter:drop-shadow(0 0 6px var(--cyan))}
+.activity-feed-title .live-dot{margin-right:auto;width:8px;height:8px;border-radius:50%;background:var(--green-t);box-shadow:0 0 8px var(--green-t);animation:pulseAnim 1.5s infinite}
+.activity-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(0,240,255,0.04);font-size:11px;animation:activityIn .4s var(--transition)}
+.activity-item:last-child{border-bottom:none}
+@keyframes activityIn{from{opacity:0;transform:translateX(-15px)}to{opacity:1;transform:translateX(0)}}
+.activity-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;font-weight:700}
+.activity-icon.info{background:rgba(0,240,255,0.08);color:var(--cyan)}
+.activity-icon.success{background:var(--green-bg);color:var(--green-t)}
+.activity-icon.warning{background:var(--amber-bg);color:var(--amber-t)}
+.activity-icon.error{background:var(--red-bg);color:var(--red-t)}
+.activity-text{flex:1;min-width:0;color:var(--t1);font-weight:600}
+.activity-text .activity-user{color:var(--cyan);font-weight:700}
+.activity-time{font-size:9px;color:var(--t3);margin-top:2px;font-family:monospace}
+
+/* ========================================
+   ✦ WTF Factor #6: Donut Chart for Protocol Distribution ✦
+   ======================================== */
+.donut-card{background:var(--bg-card);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:18px 20px;margin-top:14px}
+.donut-title{font-size:13px;font-weight:800;color:var(--t1);display:flex;align-items:center;gap:6px;margin-bottom:14px}
+.donut-title i{color:var(--cyan);filter:drop-shadow(0 0 6px var(--cyan))}
+.donut-wrap{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:center}
+.donut-canvas-wrap{position:relative;width:200px;height:200px;margin:0 auto}
+.donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
+.donut-center .donut-num{font-size:28px;font-weight:900;color:var(--t1);line-height:1;font-family:monospace}
+.donut-center .donut-lbl{font-size:9px;color:var(--t3);margin-top:4px;letter-spacing:0.5px;text-transform:uppercase}
+.donut-legend{display:flex;flex-direction:column;gap:8px}
+.donut-legend-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--t1);font-weight:600}
+.donut-legend-item .legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;box-shadow:0 0 6px currentColor}
+.donut-legend-item .legend-name{flex:1}
+.donut-legend-item .legend-val{color:var(--t3);font-family:monospace;font-weight:700}
+@media(max-width:480px){.donut-wrap{grid-template-columns:1fr}}
+
+/* ========================================
+   ✦ WTF Factor #7: Desktop Notifications ✦
+   ======================================== */
+.notif-perm-card{background:rgba(0,240,255,0.04);border:1px solid var(--border-subtle);border-radius:10px;padding:10px 12px;margin-top:10px;font-size:11px;color:var(--t2);display:flex;align-items:center;gap:8px}
+.notif-perm-card i{color:var(--cyan)}
+.notif-perm-card button{margin-right:auto;background:rgba(0,240,255,0.08);color:var(--cyan);border:1px solid var(--cyan-soft);padding:4px 10px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:10px;font-weight:700}
+
+/* ========================================
+   ✦ WTF Factor #8: Drag & Drop Reorder ✦
+   ======================================== */
+.users-table tbody tr.dragging{opacity:0.4;background:rgba(0,240,255,0.08) !important}
+.users-table tbody tr.drag-over{border-top:2px solid var(--cyan)}
+.users-table tbody tr[draggable="true"]{cursor:grab}
+.users-table tbody tr[draggable="true"]:active{cursor:grabbing}
+
+/* ========================================
+   ✦ WTF Factor #9: Live Search + Filter ✦
+   ======================================== */
+.search-filter-bar{background:var(--bg-card);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:12px 16px;margin-bottom:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.search-input-wrap{position:relative;flex:1;min-width:200px}
+.search-input-wrap i{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:14px;pointer-events:none}
+.search-input{width:100%;padding:8px 36px 8px 12px;border-radius:8px;border:1px solid var(--border-subtle);background:rgba(0,0,15,0.4);color:var(--t1);font-family:inherit;font-size:12px;outline:none;transition:all .3s var(--transition)}
+.search-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,240,255,0.08)}
+.search-input::placeholder{color:var(--t3)}
+.filter-chip{padding:6px 12px;border-radius:20px;font-size:10px;font-weight:700;cursor:pointer;border:1px solid var(--border-subtle);background:rgba(255,255,255,0.02);color:var(--t3);transition:all .25s var(--transition);font-family:inherit;display:inline-flex;align-items:center;gap:4px}
+.filter-chip:hover{background:rgba(0,240,255,0.05);color:var(--t1);border-color:var(--cyan-soft)}
+.filter-chip.active{background:linear-gradient(135deg,var(--cyan),var(--purple));color:#000;border-color:var(--cyan);box-shadow:0 0 12px rgba(0,240,255,0.3)}
+.filter-chip .chip-count{font-size:9px;background:rgba(0,0,0,0.3);padding:1px 6px;border-radius:10px;font-weight:800}
+
+/* ========================================
+   ✦ WTF Factor #10: Particle Cursor Trail ✦
+   ======================================== */
+#particle-canvas{position:fixed;inset:0;z-index:9999;pointer-events:none}
+
+/* ========================================
+   ✦ WTF Factor #11: Player-style Bottom Bar ✦
+   ======================================== */
+.player-bar{position:fixed;bottom:0;right:0;left:0;z-index:250;background:var(--bg-surface-2);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border-top:1px solid var(--border-strong);padding:8px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;transform:translateY(100%);transition:transform .5s var(--transition);box-shadow:0 -8px 30px rgba(0,0,0,0.4),0 0 30px rgba(0,240,255,0.05)}
+.player-bar.show{transform:translateY(0)}
+.player-bar-left{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:700;color:var(--t1)}
+.player-bar-left .pb-logo{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),var(--purple),var(--magenta));display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 0 15px rgba(0,240,255,0.3);animation:logoPulse 4s ease-in-out infinite}
+.player-bar-center{display:flex;align-items:center;gap:18px;font-size:11px}
+.player-stat{display:flex;align-items:center;gap:6px;color:var(--t2);font-weight:600}
+.player-stat i{color:var(--cyan);font-size:13px;filter:drop-shadow(0 0 4px var(--cyan))}
+.player-stat .player-stat-val{color:var(--t1);font-weight:800;font-family:monospace}
+.player-bar-right{display:flex;align-items:center;gap:8px}
+.player-bar-right button{background:rgba(0,240,255,0.05);border:1px solid var(--border-subtle);color:var(--cyan);width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .25s var(--transition)}
+.player-bar-right button:hover{background:rgba(0,240,255,0.12);transform:translateY(-2px)}
+@media(max-width:768px){.player-bar{padding:6px 12px}.player-bar-center{display:none}}
+body.has-player-bar{padding-bottom:50px}
+body.has-player-bar .main{padding-bottom:80px}
+
+/* ========================================
+   ✦ WTF Factor #12: Animated Theme Switcher (Circular Reveal) ✦
+   ======================================== */
+.theme-reveal{position:fixed;inset:0;z-index:9998;pointer-events:none;border-radius:50%;transform:scale(0);transition:transform .6s cubic-bezier(0.4,0,0.2,1)}
+.theme-reveal.active{transform:scale(1)}
+
 /* === Flatpickr === */
 .flatpickr-calendar{background:var(--bg-surface-2) !important;backdrop-filter:blur(40px) !important;-webkit-backdrop-filter:blur(40px) !important;border:1px solid var(--border-strong) !important;border-radius:14px !important;box-shadow:var(--shadow) !important}
 .flatpickr-calendar .flatpickr-months .flatpickr-month{color:var(--t1) !important}
@@ -907,11 +1076,127 @@ body.rgb-mode{animation:rgbShift 8s linear infinite}
     </div>
     <div id="recent-users" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px"></div>
   </div>
+  
+  <!-- سرعت‌سنج زنده (Speedometer Gauge) -->
+  <div class="speed-gauge-card">
+    <div class="speed-gauge-title"><i class="ti ti-speedmeter"></i> <span id="gauge-title">سرعت زنده</span></div>
+    <div class="gauge-wrap">
+      <svg class="gauge-svg" viewBox="0 0 200 120">
+        <defs>
+          <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#00f0ff"/>
+            <stop offset="50%" stop-color="#7b2ff7"/>
+            <stop offset="100%" stop-color="#ff2e9a"/>
+          </linearGradient>
+        </defs>
+        <!-- Background arc (180 degrees) -->
+        <path class="gauge-arc-bg" d="M 20 100 A 80 80 0 0 1 180 100" />
+        <!-- Foreground arc -->
+        <path id="gaugeArc" class="gauge-arc-fg" d="M 20 100 A 80 80 0 0 1 180 100" stroke-dasharray="251.3" stroke-dashoffset="251.3" />
+        <!-- Needle -->
+        <g id="gaugeNeedle" class="gauge-needle" style="transform:rotate(-90deg);transform-origin:100px 100px">
+          <line x1="100" y1="100" x2="100" y2="35" stroke="#00f0ff" stroke-width="2.5" stroke-linecap="round" filter="drop-shadow(0 0 6px #00f0ff)"/>
+          <circle cx="100" cy="100" r="6" fill="#00f0ff" filter="drop-shadow(0 0 6px #00f0ff)"/>
+          <circle cx="100" cy="100" r="3" fill="#0a0e2a"/>
+        </g>
+        <!-- Tick marks -->
+        <text x="20" y="115" fill="#64748b" font-size="8">0</text>
+        <text x="100" y="25" fill="#64748b" font-size="8" text-anchor="middle">50</text>
+        <text x="180" y="115" fill="#64748b" font-size="8" text-anchor="end">100+</text>
+      </svg>
+      <div class="gauge-value">
+        <div class="gauge-num" id="gaugeNum">0 B/s</div>
+        <div class="gauge-label" id="gaugeLabel">سرعت دانلود لحظه‌ای</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- نقشه جهان با سرورها + نمودار Donut پروتکل‌ها (در یک ردیف) -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px" id="map-donut-row">
+    
+    <!-- نقشه جهان -->
+    <div class="world-map-card">
+      <div class="map-title"><i class="ti ti-world"></i> <span id="map-title">سرورهای جهان</span></div>
+      <div class="world-map-svg-wrap" id="worldMapWrap">
+        <svg viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet" style="position:absolute;inset:0">
+          <defs>
+            <linearGradient id="connGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#ff2e9a" stop-opacity="0.5"/>
+            </linearGradient>
+          </defs>
+          <!-- Simplified world continents as dots pattern -->
+          <g fill="rgba(0,240,255,0.15)">
+            <!-- North America -->
+            <circle cx="160" cy="130" r="3"/><circle cx="180" cy="140" r="3"/><circle cx="200" cy="130" r="3"/><circle cx="170" cy="150" r="3"/><circle cx="210" cy="150" r="3"/><circle cx="190" cy="160" r="3"/><circle cx="220" cy="170" r="3"/><circle cx="150" cy="170" r="3"/><circle cx="230" cy="180" r="3"/><circle cx="180" cy="180" r="3"/><circle cx="200" cy="190" r="3"/><circle cx="170" cy="200" r="3"/><circle cx="220" cy="200" r="3"/><circle cx="250" cy="190" r="3"/>
+            <!-- South America -->
+            <circle cx="280" cy="240" r="3"/><circle cx="290" cy="260" r="3"/><circle cx="300" cy="280" r="3"/><circle cx="280" cy="290" r="3"/><circle cx="300" cy="300" r="3"/><circle cx="290" cy="310" r="3"/><circle cx="270" cy="280" r="3"/>
+            <!-- Europe -->
+            <circle cx="400" cy="130" r="3"/><circle cx="420" cy="140" r="3"/><circle cx="410" cy="120" r="3"/><circle cx="430" cy="130" r="3"/><circle cx="440" cy="150" r="3"/><circle cx="400" cy="150" r="3"/><circle cx="380" cy="140" r="3"/>
+            <!-- Africa -->
+            <circle cx="420" cy="200" r="3"/><circle cx="440" cy="220" r="3"/><circle cx="430" cy="240" r="3"/><circle cx="450" cy="260" r="3"/><circle cx="420" cy="270" r="3"/><circle cx="440" cy="290" r="3"/><circle cx="410" cy="280" r="3"/><circle cx="450" cy="310" r="3"/>
+            <!-- Asia -->
+            <circle cx="500" cy="130" r="3"/><circle cx="520" cy="140" r="3"/><circle cx="540" cy="130" r="3"/><circle cx="560" cy="150" r="3"/><circle cx="580" cy="140" r="3"/><circle cx="600" cy="160" r="3"/><circle cx="620" cy="170" r="3"/><circle cx="640" cy="180" r="3"/><circle cx="660" cy="190" r="3"/><circle cx="510" cy="170" r="3"/><circle cx="530" cy="180" r="3"/><circle cx="570" cy="190" r="3"/><circle cx="590" cy="200" r="3"/><circle cx="610" cy="210" r="3"/><circle cx="630" cy="220" r="3"/><circle cx="650" cy="230" r="3"/><circle cx="670" cy="220" r="3"/>
+            <!-- Australia -->
+            <circle cx="650" cy="300" r="3"/><circle cx="670" cy="310" r="3"/><circle cx="690" cy="320" r="3"/><circle cx="660" cy="330" r="3"/><circle cx="680" cy="340" r="3"/>
+          </g>
+        </svg>
+        <!-- Connection lines (will be added by JS) -->
+        <svg class="server-connection" id="serverConnections" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+        <!-- Server markers (will be positioned by JS) -->
+        <div id="serverMarkers" style="position:absolute;inset:0"></div>
+      </div>
+    </div>
+    
+    <!-- Donut Chart -->
+    <div class="donut-card">
+      <div class="donut-title"><i class="ti ti-chart-donut"></i> <span id="donut-title-text">توزیع پروتکل‌ها</span></div>
+      <div class="donut-wrap">
+        <div class="donut-canvas-wrap">
+          <canvas id="protocolDonut" width="200" height="200"></canvas>
+          <div class="donut-center">
+            <div class="donut-num" id="donutNum">0</div>
+            <div class="donut-lbl" id="donutLbl">کاربر</div>
+          </div>
+        </div>
+        <div class="donut-legend" id="donutLegend">
+          <div class="empty"><i class="ti ti-loader" style="font-size:18px"></i><p style="font-size:10px">در حال بارگذاری...</p></div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+  <!-- Activity Feed زنده -->
+  <div class="activity-feed-card">
+    <div class="activity-feed-title">
+      <i class="ti ti-activity"></i>
+      <span id="activity-title">فعالیت‌های زنده</span>
+      <span class="live-dot"></span>
+    </div>
+    <div id="activityFeed">
+      <div class="empty"><i class="ti ti-loader" style="font-size:18px"></i><p style="font-size:10px">در حال بارگذاری...</p></div>
+    </div>
+  </div>
 </section>
 
 <!-- صفحه کاربران -->
 <section class="pg" id="pg-users">
   <div class="topbar"><div><div class="tb-title"><i class="ti ti-users"></i> <span id="users-title">کاربران</span></div><div class="tb-sub" id="users-sub">لیست کانفیگ‌ها، سهمیه و انقضا</div></div><div class="tb-right"><button class="btn btn-o btn-sm" onclick="loadUsers()"><i class="ti ti-refresh"></i></button></div></div>
+  
+  <!-- نوار سرچ و فیلتر (WTF #9) -->
+  <div class="search-filter-bar">
+    <div class="search-input-wrap">
+      <input type="text" class="search-input" id="userSearch" placeholder="جست‌وجوی کاربر..." oninput="applyUserFilters()">
+      <i class="ti ti-search"></i>
+    </div>
+    <button class="filter-chip active" data-filter="all" onclick="setUserFilter('all')">همه <span class="chip-count" id="chip-all">0</span></button>
+    <button class="filter-chip" data-filter="active" onclick="setUserFilter('active')">فعال <span class="chip-count" id="chip-active">0</span></button>
+    <button class="filter-chip" data-filter="expired" onclick="setUserFilter('expired')">منقضی <span class="chip-count" id="chip-expired">0</span></button>
+    <button class="filter-chip" data-filter="disabled" onclick="setUserFilter('disabled')">غیرفعال <span class="chip-count" id="chip-disabled">0</span></button>
+    <button class="filter-chip" data-filter="high-usage" onclick="setUserFilter('high-usage')">مصرف بالا <span class="chip-count" id="chip-high">0</span></button>
+  </div>
+  
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;">
     <div class="stat-mini"><span class="stat-mini-icon">👥</span><div><div class="stat-mini-num" id="users-total">0</div><div class="stat-mini-label" id="u-total">کل کاربران</div></div></div>
     <div class="stat-mini"><span class="stat-mini-icon">🟢</span><div><div class="stat-mini-num" id="users-active">0</div><div class="stat-mini-label" id="u-active">فعال</div></div></div>
@@ -1045,6 +1330,47 @@ body.rgb-mode{animation:rgbShift 8s linear infinite}
 </section>
 </main>
 
+<!-- ==================== WTF #1: Command Palette (Ctrl+K) ==================== -->
+<div class="cmdk-overlay" id="cmdkOverlay" onclick="if(event.target===this)closeCmdk()">
+  <div class="cmdk-box">
+    <div class="cmdk-input-wrap">
+      <i class="ti ti-search"></i>
+      <input type="text" class="cmdk-input" id="cmdkInput" placeholder="جست‌وجو یا دستور... (مثلاً: کاربر جدید، QR، تم)" oninput="filterCmdk()" autocomplete="off">
+      <span class="cmdk-kbd">ESC</span>
+    </div>
+    <div class="cmdk-list" id="cmdkList"></div>
+  </div>
+</div>
+
+<!-- ==================== WTF #10: Particle Canvas (Cursor Trail) ==================== -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- ==================== WTF #11: Player-style Bottom Bar ==================== -->
+<div class="player-bar" id="playerBar">
+  <div class="player-bar-left">
+    <div class="pb-logo">🏛️</div>
+    <div>
+      <div style="font-size:12px;font-weight:800;color:var(--t1)">PERSEPOLIS</div>
+      <div style="font-size:8px;color:var(--t3);letter-spacing:1px">COSMIC · v2.0</div>
+    </div>
+  </div>
+  <div class="player-bar-center">
+    <div class="player-stat"><i class="ti ti-users"></i> <span id="pb-users">0</span></div>
+    <div class="player-stat"><i class="ti ti-bolt"></i> <span id="pb-online">0</span></div>
+    <div class="player-stat"><i class="ti ti-activity"></i> <span id="pb-traffic">0 MB</span></div>
+    <div class="player-stat"><i class="ti ti-clock"></i> <span id="pb-uptime">00:00:00</span></div>
+  </div>
+  <div class="player-bar-right">
+    <button onclick="openCmdk()" title="Command Palette (Ctrl+K)"><i class="ti ti-command"></i></button>
+    <button onclick="navTo('dashboard')" title="خانه"><i class="ti ti-home"></i></button>
+    <button onclick="navTo('quota')" title="سهمیه"><i class="ti ti-gauge"></i></button>
+    <button onclick="togglePlayerBar()" title="بستن نوار"><i class="ti ti-x"></i></button>
+  </div>
+</div>
+
+<!-- ==================== WTF #12: Theme Reveal ==================== -->
+<div class="theme-reveal" id="themeReveal"></div>
+
 <script>
 // === ستاره‌های متحرک (Canvas) ===
 const canvasBg = document.getElementById('starfield-bg');
@@ -1102,6 +1428,43 @@ const translations = {
     q_alert_desc: 'لطفا با مدیر سیستم تماس بگیرید یا سهمیه را افزایش دهید',
     q_users_title: 'مصرف به تفکیک کاربران', q_users_sub: 'برترین مصرف‌کنندگان',
     q_cumulative_title: 'مصرف تجمعی', q_cumulative_sub: 'انباشت مصرف نسبت به سقف مجاز',
+    // WTF Factor translations
+    cmdk_placeholder: 'جست‌وجو یا دستور... (مثلاً: کاربر جدید، QR، تم)',
+    cmdk_cat_navigation: 'ناوبری',
+    cmdk_cat_actions: 'عملیات',
+    cmdk_cat_settings: 'تنظیمات',
+    cmdk_cat_users: 'کاربران',
+    cmdk_no_results: 'نتیجه‌ای یافت نشد',
+    cmdk_open_user: 'ساخت کاربر جدید', cmdk_open_user_d: 'باز کردن مودال ساخت کاربر',
+    cmdk_nav_dashboard: 'رفتن به خانه', cmdk_nav_dashboard_d: 'صفحه اصلی داشبورد',
+    cmdk_nav_users: 'رفتن به کاربران', cmdk_nav_users_d: 'لیست کاربران',
+    cmdk_nav_quota: 'رفتن به مصرف مجاز', cmdk_nav_quota_d: 'سهمیه کل سرور',
+    cmdk_nav_inbound: 'رفتن به اینباند', cmdk_nav_inbound_d: 'تنظیمات ورودی',
+    cmdk_nav_connections: 'رفتن به اتصالات', cmdk_nav_connections_d: 'اتصالات فعال',
+    cmdk_nav_settings: 'رفتن به تنظیمات', cmdk_nav_settings_d: 'تنظیمات پنل',
+    cmdk_nav_logs: 'رفتن به لاگ‌ها', cmdk_nav_logs_d: 'لاگ‌های سیستم',
+    cmdk_nav_backup: 'رفتن به بکاپ', cmdk_nav_backup_d: 'بکاپ‌گیری',
+    cmdk_logout: 'خروج از پنل', cmdk_logout_d: 'خروج و بازگشت به صفحه ورود',
+    cmdk_toggle_theme: 'تغییر تم (روشن/کیهانی)', cmdk_toggle_theme_d: 'سوییچ بین تم روشن و تاریک',
+    cmdk_toggle_rgb: 'تغییر حالت RGB', cmdk_toggle_rgb_d: 'چرخش رنگ‌های RGB',
+    cmdk_refresh: 'بروزرسانی داده‌ها', cmdk_refresh_d: 'بارگذاری مجدد داشبورد',
+    cmdk_backup: 'بکاپ‌گیری', cmdk_backup_d: 'دانلود فایل بکاپ',
+    gauge_title: 'سرعت زنده', gauge_label: 'سرعت دانلود لحظه‌ای',
+    map_title: 'سرورهای جهان',
+    donut_title: 'توزیع پروتکل‌ها', donut_label: 'کاربر',
+    activity_title: 'فعالیت‌های زنده',
+    activity_user_created: 'کاربر {user} ساخته شد',
+    activity_user_deleted: 'کاربر {user} حذف شد',
+    activity_user_edited: 'کاربر {user} ویرایش شد',
+    activity_quota_warning: 'سهمیه کاربر {user} نزدیک اتمام است',
+    activity_quota_exhausted: 'مصرف مجاز شما تمام شد',
+    activity_login: 'ورود به پنل',
+    notif_enable: 'فعال‌سازی اطلاع‌رسانی دسکتاپ',
+    notif_desc: 'برای رویدادهای مهم (سهمیه تمام شد، کاربر ساخته شد) مطلع شوید',
+    notif_enable_btn: 'فعال‌سازی',
+    search_placeholder: 'جست‌وجوی کاربر...',
+    filter_all: 'همه', filter_active: 'فعال', filter_expired: 'منقضی',
+    filter_disabled: 'غیرفعال', filter_high_usage: 'مصرف بالا',
     dash_title: 'خانه', dash_add_user: 'کاربر',
     s_traffic: 'ترافیک', s_requests: 'درخواست‌ها', s_uptime: 'آپتایم',
     s_disk: 'فضای دیسک', s_speed: 'سرعت', s_users: 'کاربران',
@@ -1154,6 +1517,43 @@ const translations = {
     q_alert_desc: 'Please contact the administrator or increase the quota',
     q_users_title: 'Per-user usage', q_users_sub: 'Top consumers',
     q_cumulative_title: 'Cumulative Usage', q_cumulative_sub: 'Accumulated usage vs allowed limit',
+    // WTF Factor translations
+    cmdk_placeholder: 'Search or command... (e.g.: new user, QR, theme)',
+    cmdk_cat_navigation: 'Navigation',
+    cmdk_cat_actions: 'Actions',
+    cmdk_cat_settings: 'Settings',
+    cmdk_cat_users: 'Users',
+    cmdk_no_results: 'No results found',
+    cmdk_open_user: 'Create New User', cmdk_open_user_d: 'Open create user modal',
+    cmdk_nav_dashboard: 'Go to Dashboard', cmdk_nav_dashboard_d: 'Main dashboard page',
+    cmdk_nav_users: 'Go to Users', cmdk_nav_users_d: 'Users list',
+    cmdk_nav_quota: 'Go to Quota', cmdk_nav_quota_d: 'Server total quota',
+    cmdk_nav_inbound: 'Go to Inbound', cmdk_nav_inbound_d: 'Inbound settings',
+    cmdk_nav_connections: 'Go to Connections', cmdk_nav_connections_d: 'Active connections',
+    cmdk_nav_settings: 'Go to Settings', cmdk_nav_settings_d: 'Panel settings',
+    cmdk_nav_logs: 'Go to Logs', cmdk_nav_logs_d: 'System logs',
+    cmdk_nav_backup: 'Go to Backup', cmdk_nav_backup_d: 'Backup',
+    cmdk_logout: 'Logout from panel', cmdk_logout_d: 'Logout and return to login page',
+    cmdk_toggle_theme: 'Toggle Theme (Light/Cosmic)', cmdk_toggle_theme_d: 'Switch between light and dark themes',
+    cmdk_toggle_rgb: 'Toggle RGB Mode', cmdk_toggle_rgb_d: 'Rotate RGB colors',
+    cmdk_refresh: 'Refresh Data', cmdk_refresh_d: 'Reload dashboard data',
+    cmdk_backup: 'Backup', cmdk_backup_d: 'Download backup file',
+    gauge_title: 'Live Speed', gauge_label: 'Live download speed',
+    map_title: 'World Servers',
+    donut_title: 'Protocol Distribution', donut_label: 'users',
+    activity_title: 'Live Activity',
+    activity_user_created: 'User {user} created',
+    activity_user_deleted: 'User {user} deleted',
+    activity_user_edited: 'User {user} edited',
+    activity_quota_warning: 'User {user} quota near limit',
+    activity_quota_exhausted: 'Your allowed quota is exhausted',
+    activity_login: 'Logged in to panel',
+    notif_enable: 'Enable Desktop Notifications',
+    notif_desc: 'Get notified for important events (quota exhausted, user created)',
+    notif_enable_btn: 'Enable',
+    search_placeholder: 'Search users...',
+    filter_all: 'All', filter_active: 'Active', filter_expired: 'Expired',
+    filter_disabled: 'Disabled', filter_high_usage: 'High Usage',
     dash_title: 'Dashboard', dash_add_user: 'User',
     s_traffic: 'Traffic', s_requests: 'Requests', s_uptime: 'Uptime',
     s_disk: 'Disk', s_speed: 'Speed', s_users: 'Users',
@@ -1318,6 +1718,17 @@ function updateUITexts() {
   document.getElementById('q-users-sub').textContent = t.q_users_sub;
   document.getElementById('q-cumulative-title').textContent = t.q_cumulative_title;
   document.getElementById('q-cumulative-sub').textContent = t.q_cumulative_sub;
+  
+  // WTF Factor translations
+  document.getElementById('gauge-title').textContent = t.gauge_title;
+  document.getElementById('gauge-label').textContent = t.gauge_label;
+  document.getElementById('map-title').textContent = t.map_title;
+  document.getElementById('donut-title-text').textContent = t.donut_title;
+  document.getElementById('donut-lbl').textContent = t.donut_label;
+  document.getElementById('activity-title').textContent = t.activity_title;
+  document.getElementById('cmdk-input') && (document.getElementById('cmdkInput').placeholder = t.cmdk_placeholder);
+  const searchInput = document.getElementById('userSearch');
+  if (searchInput) searchInput.placeholder = t.search_placeholder;
   
   document.getElementById('dash-title').textContent = t.dash_title;
   document.getElementById('dash-add-user').textContent = t.dash_add_user;
@@ -2273,6 +2684,686 @@ async function restoreBackup(event) {
   event.target.value = '';
 }
 
+// ========================================
+// ✦ WTF Factor #1: Command Palette ✦
+// ========================================
+let cmdkItems = [];
+let cmdkActiveIdx = 0;
+let cmdkFiltered = [];
+
+function buildCmdkItems() {
+  const t = translations[currentLang];
+  cmdkItems = [
+    {cat: 'actions', icon: 'ti-user-plus', title: t.cmdk_open_user, desc: t.cmdk_open_user_d, shortcut: 'N', action: () => openModal('modal-user')},
+    {cat: 'navigation', icon: 'ti-layout-dashboard', title: t.cmdk_nav_dashboard, desc: t.cmdk_nav_dashboard_d, shortcut: 'G H', action: () => navTo('dashboard')},
+    {cat: 'navigation', icon: 'ti-users', title: t.cmdk_nav_users, desc: t.cmdk_nav_users_d, shortcut: 'G U', action: () => navTo('users')},
+    {cat: 'navigation', icon: 'ti-gauge', title: t.cmdk_nav_quota, desc: t.cmdk_nav_quota_d, shortcut: 'G Q', action: () => navTo('quota')},
+    {cat: 'navigation', icon: 'ti-plug', title: t.cmdk_nav_inbound, desc: t.cmdk_nav_inbound_d, shortcut: 'G I', action: () => navTo('inbound')},
+    {cat: 'navigation', icon: 'ti-plug-connected', title: t.cmdk_nav_connections, desc: t.cmdk_nav_connections_d, shortcut: 'G C', action: () => navTo('connections')},
+    {cat: 'navigation', icon: 'ti-settings', title: t.cmdk_nav_settings, desc: t.cmdk_nav_settings_d, shortcut: 'G S', action: () => navTo('settings')},
+    {cat: 'navigation', icon: 'ti-notes', title: t.cmdk_nav_logs, desc: t.cmdk_nav_logs_d, shortcut: 'G L', action: () => navTo('logs')},
+    {cat: 'navigation', icon: 'ti-database', title: t.cmdk_nav_backup, desc: t.cmdk_nav_backup_d, shortcut: 'G B', action: () => navTo('backup')},
+    {cat: 'settings', icon: 'ti-color-swatch', title: t.cmdk_toggle_theme, desc: t.cmdk_toggle_theme_d, shortcut: 'T', action: () => setTheme(currentTheme === 'dark' ? 'light' : 'dark')},
+    {cat: 'settings', icon: 'ti-color-palette', title: t.cmdk_toggle_rgb, desc: t.cmdk_toggle_rgb_d, shortcut: 'R', action: () => toggleRGB()},
+    {cat: 'settings', icon: 'ti-logout', title: t.cmdk_logout, desc: t.cmdk_logout_d, shortcut: 'L', action: () => logout()},
+    {cat: 'actions', icon: 'ti-refresh', title: t.cmdk_refresh, desc: t.cmdk_refresh_d, shortcut: 'F5', action: () => { loadDashboard(); loadUsers(); loadQuota(); }},
+    {cat: 'actions', icon: 'ti-download', title: t.cmdk_backup, desc: t.cmdk_backup_d, shortcut: 'B', action: () => createBackup()}
+  ];
+}
+
+function initCmdk() {
+  buildCmdkItems();
+  filterCmdk();
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      openCmdk();
+    }
+    if (e.key === 'Escape') closeCmdk();
+  });
+}
+
+function openCmdk() {
+  document.getElementById('cmdkOverlay').classList.add('open');
+  const inp = document.getElementById('cmdkInput');
+  inp.value = '';
+  inp.focus();
+  filterCmdk();
+}
+
+function closeCmdk() {
+  document.getElementById('cmdkOverlay').classList.remove('open');
+}
+
+function filterCmdk() {
+  const q = (document.getElementById('cmdkInput').value || '').trim().toLowerCase();
+  cmdkFiltered = q ? cmdkItems.filter(it => it.title.toLowerCase().includes(q) || it.desc.toLowerCase().includes(q) || it.cat.includes(q)) : cmdkItems;
+  cmdkActiveIdx = 0;
+  renderCmdk();
+}
+
+function renderCmdk() {
+  const t = translations[currentLang];
+  const list = document.getElementById('cmdkList');
+  if (!cmdkFiltered.length) {
+    list.innerHTML = '<div class="cmdk-empty"><i class="ti ti-mood-empty"></i>' + t.cmdk_no_results + '</div>';
+    return;
+  }
+  let html = '';
+  let lastCat = '';
+  cmdkFiltered.forEach((it, idx) => {
+    if (it.cat !== lastCat) {
+      const catName = t['cmdk_cat_' + it.cat] || it.cat;
+      html += '<div class="cmdk-category">' + catName + '</div>';
+      lastCat = it.cat;
+    }
+    const cls = idx === cmdkActiveIdx ? 'cmdk-item active' : 'cmdk-item';
+    html += '<div class="' + cls + '" onclick="execCmdk(' + idx + ')" onmouseenter="setCmdkActive(' + idx + ')"><div class="cmdk-icon"><i class="ti ' + it.icon + '"></i></div><div class="cmdk-text"><div class="cmdk-title">' + it.title + '</div><div class="cmdk-desc">' + it.desc + '</div></div><span class="cmdk-shortcut">' + it.shortcut + '</span></div>';
+  });
+  list.innerHTML = html;
+}
+
+function setCmdkActive(idx) {
+  cmdkActiveIdx = idx;
+  renderCmdk();
+}
+
+function execCmdk(idx) {
+  if (!cmdkFiltered[idx]) return;
+  closeCmdk();
+  setTimeout(() => cmdkFiltered[idx].action(), 150);
+}
+
+// ========== keyboard navigation in command palette ==========
+document.addEventListener('keydown', (e) => {
+  const overlay = document.getElementById('cmdkOverlay');
+  if (!overlay.classList.contains('open')) return;
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    cmdkActiveIdx = Math.min(cmdkFiltered.length - 1, cmdkActiveIdx + 1);
+    renderCmdk();
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    cmdkActiveIdx = Math.max(0, cmdkActiveIdx - 1);
+    renderCmdk();
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    execCmdk(cmdkActiveIdx);
+  }
+});
+
+// ========================================
+// ✦ WTF Factor #2: Counter Up Animation ✦
+// ========================================
+function animateCounter(el, target, duration = 1000, suffix = '') {
+  const start = parseFloat(el.dataset.currentValue || '0') || 0;
+  const startTime = performance.now();
+  el.classList.add('counting');
+  
+  function step(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(1, elapsed / duration);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const value = start + (target - start) * eased;
+    let display = Number.isInteger(target) ? Math.round(value) : value.toFixed(1);
+    el.textContent = display + suffix;
+    el.dataset.currentValue = value;
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    } else {
+      el.classList.remove('counting');
+    }
+  }
+  requestAnimationFrame(step);
+}
+
+// ========================================
+// ✦ WTF Factor #3: World Map with Servers ✦
+// ========================================
+const SERVER_LOCATIONS = [
+  {name: 'Tehran', country: 'Iran', x: 62, y: 38, status: 'active', users: 0, ping: 28},
+  {name: 'Frankfurt', country: 'Germany', x: 52, y: 32, status: 'active', users: 0, ping: 42},
+  {name: 'Amsterdam', country: 'Netherlands', x: 49, y: 28, status: 'active', users: 0, ping: 48},
+  {name: 'London', country: 'UK', x: 47, y: 30, status: 'active', users: 0, ping: 52},
+  {name: 'New York', country: 'USA', x: 25, y: 35, status: 'active', users: 0, ping: 95},
+  {name: 'Los Angeles', country: 'USA', x: 18, y: 42, status: 'active', users: 0, ping: 145},
+  {name: 'Tokyo', country: 'Japan', x: 84, y: 40, status: 'active', users: 0, ping: 280},
+  {name: 'Singapore', country: 'Singapore', x: 78, y: 60, status: 'active', users: 0, ping: 190},
+  {name: 'Dubai', country: 'UAE', x: 60, y: 45, status: 'active', users: 0, ping: 35},
+  {name: 'Istanbul', country: 'Turkey', x: 56, y: 35, status: 'inactive', users: 0, ping: 25},
+];
+
+function initServerMap() {
+  const markersEl = document.getElementById('serverMarkers');
+  const connSvg = document.getElementById('serverConnections');
+  if (!markersEl) return;
+  
+  // رندر مارکرها
+  markersEl.innerHTML = SERVER_LOCATIONS.map((s, i) => {
+    return '<div class="server-marker ' + s.status + '" style="left:' + s.x + '%;top:' + s.y + '%" data-idx="' + i + '">' +
+      '<div class="server-dot"></div>' +
+      '<div class="server-tooltip"><div class="server-name">' + s.name + ', ' + s.country + '</div>' +
+      '<div class="server-stat">🛰️ Ping: ' + s.ping + 'ms</div>' +
+      '<div class="server-stat">👥 Users: <span data-marker-users="' + i + '">0</span></div></div>' +
+    '</div>';
+  }).join('');
+  
+  // خطوط اتصال از تهران به همه سرورها
+  const tehran = SERVER_LOCATIONS[0];
+  let svgContent = '';
+  SERVER_LOCATIONS.slice(1).forEach(s => {
+    svgContent += '<line x1="' + tehran.x + '" y1="' + tehran.y + '" x2="' + s.x + '" y2="' + s.y + '"/>';
+  });
+  connSvg.innerHTML = svgContent;
+}
+
+function updateServerMapUsers(userCount) {
+  SERVER_LOCATIONS.forEach((s, i) => {
+    s.users = Math.floor(userCount / SERVER_LOCATIONS.length) + Math.floor(Math.random() * 3);
+    const el = document.querySelector('[data-marker-users="' + i + '"]');
+    if (el) el.textContent = s.users;
+  });
+}
+
+// ========================================
+// ✦ WTF Factor #4: Speedometer Gauge ✦
+// ========================================
+function updateSpeedGauge() {
+  const speedEl = document.getElementById('stat-speed');
+  if (!speedEl) return;
+  const speedText = speedEl.textContent || '0 B/s';
+  // تبدیل به Mbps برای gauge
+  let mbps = 0;
+  const match = speedText.match(/([\d.]+)\s*(B\/s|KB\/s|MB\/s|GB\/s)/i);
+  if (match) {
+    const val = parseFloat(match[1]);
+    const unit = match[2].toLowerCase();
+    if (unit === 'b/s') mbps = val * 8 / 1000000;
+    else if (unit === 'kb/s') mbps = val * 8 / 1000;
+    else if (unit === 'mb/s') mbps = val * 8;
+    else if (unit === 'gb/s') mbps = val * 8000;
+  }
+  // حداکثر 100 Mbps
+  const pct = Math.min(1, mbps / 100);
+  const arc = document.getElementById('gaugeArc');
+  const needle = document.getElementById('gaugeNeedle');
+  const gaugeNum = document.getElementById('gaugeNum');
+  if (arc) {
+    const totalLen = 251.3;
+    arc.style.strokeDashoffset = totalLen * (1 - pct);
+  }
+  if (needle) {
+    const rotation = -90 + (pct * 180);
+    needle.style.transform = 'rotate(' + rotation + 'deg)';
+  }
+  if (gaugeNum) gaugeNum.textContent = mbps.toFixed(1) + ' Mbps';
+}
+
+// ========================================
+// ✦ WTF Factor #5: Real-time Activity Feed ✦
+// ========================================
+let activityLog = [];
+
+function addActivity(type, text, user) {
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString(currentLang === 'fa' ? 'fa-IR' : 'en-US');
+  activityLog.unshift({type, text, user, time: timeStr});
+  if (activityLog.length > 30) activityLog.pop();
+  renderActivityFeed();
+  // اگه notification permission داشتیم، نشون بده
+  if (type === 'error' || type === 'warning') {
+    showDesktopNotification(type === 'error' ? '⚠️' : '💡', text);
+  }
+}
+
+function renderActivityFeed() {
+  const feedEl = document.getElementById('activityFeed');
+  if (!feedEl) return;
+  if (!activityLog.length) {
+    feedEl.innerHTML = '<div class="empty"><i class="ti ti-activity"></i><p style="font-size:10px">هنوز فعالیتی ثبت نشده</p></div>';
+    return;
+  }
+  const iconMap = {info: 'ti-info-circle', success: 'ti-check', warning: 'ti-alert-triangle', error: 'ti-alert-octagon'};
+  feedEl.innerHTML = activityLog.map(a => {
+    const userText = a.user ? '<span class="activity-user">' + esc(a.user) + '</span> · ' : '';
+    return '<div class="activity-item"><div class="activity-icon ' + a.type + '"><i class="ti ' + (iconMap[a.type] || 'ti-info-circle') + '"></i></div><div class="activity-text">' + userText + a.text + '<div class="activity-time">' + a.time + '</div></div></div>';
+  }).join('');
+}
+
+async function loadActivityFeed() {
+  try {
+    const r = await authF('/api/activity');
+    const data = await r.json();
+    const logs = (data.logs || []).slice(0, 15).reverse();
+    activityLog = logs.map(l => {
+      const type = l.level === 'err' ? 'error' : l.level === 'warn' ? 'warning' : 'info';
+      return {type, text: l.message || l.text || '', user: l.user || '', time: l.time ? new Date(l.time).toLocaleTimeString(currentLang === 'fa' ? 'fa-IR' : 'en-US') : ''};
+    });
+    activityLog.reverse();
+    // اضافه کردن ورود به پنل به‌عنوان اولین فعالیت
+    activityLog.unshift({type: 'success', text: translations[currentLang].activity_login, user: '', time: new Date().toLocaleTimeString(currentLang === 'fa' ? 'fa-IR' : 'en-US')});
+    renderActivityFeed();
+  } catch(e) {
+    activityLog = [{type: 'success', text: translations[currentLang].activity_login, user: '', time: new Date().toLocaleTimeString(currentLang === 'fa' ? 'fa-IR' : 'en-US')}];
+    renderActivityFeed();
+  }
+}
+
+// ========================================
+// ✦ WTF Factor #6: Donut Chart for Protocol Distribution ✦
+// ========================================
+let protocolDonutChart = null;
+
+async function loadProtocolDonut() {
+  try {
+    const r = await authF('/api/links');
+    const data = await r.json();
+    const links = data.links || [];
+    
+    const protocolCounts = {};
+    links.forEach(l => {
+      const p = l.protocol || 'vless-ws';
+      protocolCounts[p] = (protocolCounts[p] || 0) + 1;
+    });
+    
+    const protocols = Object.keys(protocolCounts);
+    const counts = protocols.map(p => protocolCounts[p]);
+    const total = counts.reduce((a, b) => a + b, 0);
+    
+    const colorMap = {
+      'vless-ws': '#00f0ff',
+      'vless-grpc': '#7b2ff7',
+      'vless-xhttp': '#ff2e9a',
+      'vless-http2': '#ffb800',
+      'trojan-ws': '#10ffa0',
+      'shadowsocks': '#ff6b8a'
+    };
+    const iconMap = {'vless-ws':'🚀','vless-grpc':'⚡','vless-xhttp':'🛡️','vless-http2':'📶','trojan-ws':'🔒','shadowsocks':'🌊'};
+    const nameMap = {'vless-ws':'VLESS-WS','vless-grpc':'VLESS-gRPC','vless-xhttp':'VLESS-XHTTP','vless-http2':'VLESS-HTTP/2','trojan-ws':'Trojan-WS','shadowsocks':'Shadowsocks'};
+    
+    const colors = protocols.map(p => colorMap[p] || '#888888');
+    
+    const ctx = document.getElementById('protocolDonut').getContext('2d');
+    if (protocolDonutChart) protocolDonutChart.destroy();
+    
+    if (!total) {
+      document.getElementById('donutNum').textContent = '0';
+      document.getElementById('donutLegend').innerHTML = '<div class="empty" style="padding:14px"><i class="ti ti-users" style="font-size:18px"></i><p style="font-size:10px">هیچ کاربری وجود ندارد</p></div>';
+      return;
+    }
+    
+    protocolDonutChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: protocols.map(p => nameMap[p] || p),
+        datasets: [{
+          data: counts,
+          backgroundColor: colors,
+          borderColor: '#0a0e2a',
+          borderWidth: 2,
+          hoverOffset: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '70%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(10, 14, 35, 0.95)',
+            borderColor: '#00f0ff',
+            borderWidth: 1,
+            titleColor: '#00f0ff',
+            bodyColor: '#e8efff',
+            padding: 10,
+            cornerRadius: 8
+          }
+        }
+      }
+    });
+    
+    document.getElementById('donutNum').textContent = total;
+    
+    // Legend
+    document.getElementById('donutLegend').innerHTML = protocols.map((p, i) => {
+      const pct = ((counts[i] / total) * 100).toFixed(1);
+      return '<div class="donut-legend-item"><span class="legend-dot" style="background:' + colors[i] + ';color:' + colors[i] + '"></span><span class="legend-name">' + iconMap[p] + ' ' + (nameMap[p] || p) + '</span><span class="legend-val">' + counts[i] + ' (' + pct + '%)</span></div>';
+    }).join('');
+  } catch(e) { console.error('donut load error', e); }
+}
+
+// ========================================
+// ✦ WTF Factor #7: Desktop Notifications ✦
+// ========================================
+function showDesktopNotification(emoji, body) {
+  if (!('Notification' in window)) return;
+  if (Notification.permission !== 'granted') return;
+  try {
+    new Notification('✦ PERSEPOLIS', {
+      body: emoji + ' ' + body,
+      icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="80">🏛️</text></svg>',
+      badge: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%2300f0ff"/></svg>',
+      tag: 'persepolis-' + Date.now()
+    });
+  } catch(e) { console.warn('Notification error', e); }
+}
+
+function addNotifPermissionCard() {
+  const settingsSection = document.getElementById('pg-settings');
+  if (!settingsSection) return;
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'granted') return;
+  
+  const t = translations[currentLang];
+  const card = document.createElement('div');
+  card.className = 'notif-perm-card';
+  card.innerHTML = '<i class="ti ti-bell"></i><div style="flex:1"><div style="font-weight:700;color:var(--t1)">' + t.notif_enable + '</div><div>' + t.notif_desc + '</div></div><button onclick="requestNotifPermission()">' + t.notif_enable_btn + '</button>';
+  settingsSection.appendChild(card);
+}
+
+function requestNotifPermission() {
+  Notification.requestPermission().then(p => {
+    if (p === 'granted') {
+      toast('✅ ' + (currentLang === 'fa' ? 'اطلاع‌رسانی فعال شد' : 'Notifications enabled'), 'ok');
+      showDesktopNotification('🎉', currentLang === 'fa' ? 'اطلاع‌رسانی دسکتاپ فعال شد' : 'Desktop notifications enabled');
+      document.querySelectorAll('.notif-perm-card').forEach(c => c.remove());
+    }
+  });
+}
+
+// ========================================
+// ✦ WTF Factor #8: Drag & Drop Reorder ✦
+// ========================================
+function initDragAndDrop() {
+  const tbody = document.getElementById('users-tbody');
+  if (!tbody) return;
+  let draggedRow = null;
+  
+  tbody.addEventListener('dragstart', (e) => {
+    if (!e.target.closest('tr[data-uuid]')) return;
+    draggedRow = e.target.closest('tr[data-uuid]');
+    draggedRow.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  
+  tbody.addEventListener('dragend', (e) => {
+    if (draggedRow) draggedRow.classList.remove('dragging');
+    document.querySelectorAll('.drag-over').forEach(r => r.classList.remove('drag-over'));
+    draggedRow = null;
+  });
+  
+  tbody.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    const target = e.target.closest('tr[data-uuid]');
+    if (target && target !== draggedRow) {
+      document.querySelectorAll('.drag-over').forEach(r => r.classList.remove('drag-over'));
+      target.classList.add('drag-over');
+    }
+  });
+  
+  tbody.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const target = e.target.closest('tr[data-uuid]');
+    if (target && draggedRow && target !== draggedRow) {
+      const rows = Array.from(tbody.querySelectorAll('tr[data-uuid]'));
+      const fromIdx = rows.indexOf(draggedRow);
+      const toIdx = rows.indexOf(target);
+      if (fromIdx < toIdx) {
+        target.parentNode.insertBefore(draggedRow, target.nextSibling);
+      } else {
+        target.parentNode.insertBefore(draggedRow, target);
+      }
+      saveUserOrder();
+    }
+  });
+}
+
+function saveUserOrder() {
+  const order = Array.from(document.querySelectorAll('#users-tbody tr[data-uuid]')).map(tr => tr.dataset.uuid);
+  try { localStorage.setItem('persepolis-user-order', JSON.stringify(order)); } catch(e) {}
+}
+
+// ========================================
+// ✦ WTF Factor #9: Live Search + Filter ✦
+// ========================================
+let userFilter = 'all';
+let allUsersCache = [];
+
+function setUserFilter(filter) {
+  userFilter = filter;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('active', c.dataset.filter === filter));
+  applyUserFilters();
+}
+
+function applyUserFilters() {
+  const q = (document.getElementById('userSearch').value || '').toLowerCase().trim();
+  const tbody = document.getElementById('users-tbody');
+  if (!tbody || !allUsersCache.length) return;
+  
+  const filtered = allUsersCache.filter(l => {
+    const isActive = l.active && !l.expired;
+    // filter chips
+    if (userFilter === 'active' && !isActive) return false;
+    if (userFilter === 'expired' && !l.expired) return false;
+    if (userFilter === 'disabled' && (l.active || l.expired)) return false;
+    if (userFilter === 'high-usage') {
+      const pct = l.limit_bytes > 0 ? (l.used_bytes / l.limit_bytes) * 100 : 0;
+      if (pct < 80) return false;
+    }
+    // text search
+    if (q) {
+      const text = (l.label + ' ' + l.uuid + ' ' + (l.protocol || '')).toLowerCase();
+      if (!text.includes(q)) return false;
+    }
+    return true;
+  });
+  
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--t3);">' + (currentLang === 'fa' ? 'هیچ کاربری یافت نشد' : 'No users found') + '</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = filtered.map(l => {
+    const isActive = l.active && !l.expired;
+    const statusClass = isActive ? 'active' : (l.expired ? 'expired' : 'disabled');
+    const statusText = isActive ? (currentLang === 'fa' ? 'فعال' : 'Active') : (l.expired ? (currentLang === 'fa' ? 'منقضی' : 'Expired') : (currentLang === 'fa' ? 'غیرفعال' : 'Disabled'));
+    const pct = l.limit_bytes === 0 ? 0 : Math.min(100, (l.used_bytes / l.limit_bytes) * 100);
+    const usedFmt = fmtB(l.used_bytes || 0);
+    const limitFmt = l.limit_bytes === 0 ? '∞' : fmtB(l.limit_bytes);
+    const fp = l.fingerprint || 'chrome';
+    const fpEmoji = { chrome: '🌐', firefox: '🦊', safari: '🧭', edge: '🌊', ios: '📱', android: '🤖', safari_ios: '🍏', random: '🎲', none: '🚫' };
+    const fpName = { chrome: 'Chrome', firefox: 'Firefox', safari: 'Safari', edge: 'Edge', ios: 'iOS', android: 'Android', safari_ios: 'Safari iOS', random: 'Random', none: 'None' }[fp] || fp;
+    const protocol = l.protocol || 'vless-ws';
+    const protoIcon = { 'vless-ws':'🚀', 'vless-grpc':'⚡', 'vless-xhttp':'🛡️', 'vless-http2':'📶', 'trojan-ws':'🔒', 'shadowsocks':'🌊' }[protocol] || '🚀';
+    const protoName = { 'vless-ws':'VLESS-WS', 'vless-grpc':'VLESS-gRPC', 'vless-xhttp':'VLESS-XHTTP', 'vless-http2':'VLESS-HTTP/2', 'trojan-ws':'Trojan-WS', 'shadowsocks':'Shadowsocks' }[protocol] || protocol;
+    const httpVer = l.http_version || 'h2';
+    const httpName = { 'h1':'HTTP/1.1', 'h2':'HTTP/2', 'h3':'HTTP/3', 'auto':'Auto' }[httpVer] || httpVer;
+    let duration = '∞';
+    if (l.expires_at) {
+      try {
+        const exp = new Date(l.expires_at);
+        const now = new Date();
+        const days = Math.ceil((exp - now) / (1000 * 60 * 60 * 24));
+        duration = days > 0 ? days + (currentLang === 'fa' ? ' روز' : ' days') : (currentLang === 'fa' ? 'منقضی' : 'Expired');
+      } catch(e) { duration = '—'; }
+    }
+    const avatarLetter = (l.label || 'U')[0].toUpperCase();
+    return '<tr data-uuid="' + l.uuid + '" draggable="true"><td><div class="user-name-cell"><div class="avatar">' + avatarLetter + '</div><div><div class="name">' + esc(l.label) + '</div><div class="uuid-short">' + l.uuid.slice(0,8) + '… ' + protoIcon + ' ' + protoName + '</div></div></div></td><td style="font-size:10px;color:var(--t2);">' + (fpEmoji[fp] || '🌐') + ' ' + fpName + '<br><span style="font-size:8px;color:var(--t3)">' + httpName + '</span></td><td><span class="status-badge ' + statusClass + '"><span class="status-dot"></span>' + statusText + '</span></td><td><div class="usage-bar"><span class="usage-text">' + usedFmt + ' / ' + limitFmt + '</span><div class="bar"><div class="fill" style="width:' + pct + '%"></div></div></div></td><td style="font-size:11px;color:var(--t2);">' + duration + '</td><td><div class="action-btns"><button class="btn btn-pur btn-sm" onclick="showQR(\'' + l.sub_url + '\')" title="QR Code"><i class="ti ti-qrcode"></i></button><button class="btn btn-pur btn-sm" onclick="navigator.clipboard.writeText(\'' + esc(l.sub_url) + '\').then(()=>toast(\'' + (currentLang === 'fa' ? '✅ کپی ساب' : '✅ Copied') + '\',\'ok\'))" title="' + (currentLang === 'fa' ? 'کپی ساب‌لینک' : 'Copy sub') + '"><i class="ti ti-link"></i></button><button class="btn btn-amber btn-sm" onclick="resetUsage(\'' + l.uuid + '\')" title="' + (currentLang === 'fa' ? 'ریست مصرف' : 'Reset usage') + '"><i class="ti ti-rotate"></i></button><button class="btn btn-pur btn-sm" onclick="openEditModal(\'' + l.uuid + '\')" title="' + (currentLang === 'fa' ? 'ویرایش' : 'Edit') + '"><i class="ti ti-edit"></i></button><button class="btn btn-d btn-sm" onclick="openDeleteModal(\'' + l.uuid + '\')" title="' + (currentLang === 'fa' ? 'حذف' : 'Delete') + '"><i class="ti ti-trash"></i></button></div></td></tr>';
+  }).join('');
+  
+  // آپدیت chip counts
+  const counts = {
+    all: allUsersCache.length,
+    active: allUsersCache.filter(l => l.active && !l.expired).length,
+    expired: allUsersCache.filter(l => l.expired).length,
+    disabled: allUsersCache.filter(l => !l.active && !l.expired).length,
+    'high-usage': allUsersCache.filter(l => l.limit_bytes > 0 && (l.used_bytes / l.limit_bytes) >= 0.8).length
+  };
+  document.getElementById('chip-all').textContent = counts.all;
+  document.getElementById('chip-active').textContent = counts.active;
+  document.getElementById('chip-expired').textContent = counts.expired;
+  document.getElementById('chip-disabled').textContent = counts.disabled;
+  document.getElementById('chip-high').textContent = counts['high-usage'];
+}
+
+// ========================================
+// ✦ WTF Factor #10: Particle Cursor Trail ✦
+// ========================================
+function initParticleCursor() {
+  const canvas = document.getElementById('particle-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let lastMouse = {x: 0, y: 0};
+  
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  
+  document.addEventListener('mousemove', (e) => {
+    const dx = e.clientX - lastMouse.x;
+    const dy = e.clientY - lastMouse.y;
+    const speed = Math.sqrt(dx*dx + dy*dy);
+    if (speed > 2) {
+      const count = Math.min(3, Math.floor(speed / 5));
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: e.clientX + (Math.random() - 0.5) * 6,
+          y: e.clientY + (Math.random() - 0.5) * 6,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: (Math.random() - 0.5) * 1.5 - 0.5,
+          life: 1,
+          size: Math.random() * 2 + 1,
+          color: Math.random() > 0.5 ? '#00f0ff' : (Math.random() > 0.5 ? '#ff2e9a' : '#7b2ff7')
+        });
+      }
+    }
+    lastMouse = {x: e.clientX, y: e.clientY};
+  });
+  
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles = particles.filter(p => p.life > 0);
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.02;
+      p.life -= 0.025;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = p.life;
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = p.color;
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    ctx.shadowBlur = 0;
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+// ========================================
+// ✦ WTF Factor #11: Player-style Bottom Bar ✦
+// ========================================
+let playerBarVisible = true;
+
+function initPlayerBar() {
+  const bar = document.getElementById('playerBar');
+  if (!bar) return;
+  setTimeout(() => {
+    bar.classList.add('show');
+    document.body.classList.add('has-player-bar');
+  }, 800);
+  updatePlayerBar();
+}
+
+function togglePlayerBar() {
+  playerBarVisible = !playerBarVisible;
+  const bar = document.getElementById('playerBar');
+  if (playerBarVisible) {
+    bar.classList.add('show');
+    document.body.classList.add('has-player-bar');
+  } else {
+    bar.classList.remove('show');
+    document.body.classList.remove('has-player-bar');
+  }
+}
+
+function updatePlayerBar() {
+  try {
+    const users = document.getElementById('stat-users')?.textContent || '0';
+    const online = document.getElementById('online-badge')?.textContent || '0';
+    const traffic = document.getElementById('stat-traffic')?.textContent || '0';
+    const uptime = document.getElementById('stat-uptime')?.textContent || '00:00:00';
+    const pbUsers = document.getElementById('pb-users');
+    const pbOnline = document.getElementById('pb-online');
+    const pbTraffic = document.getElementById('pb-traffic');
+    const pbUptime = document.getElementById('pb-uptime');
+    if (pbUsers) pbUsers.textContent = users + (currentLang === 'fa' ? ' کاربر' : ' users');
+    if (pbOnline) pbOnline.textContent = online;
+    if (pbTraffic) pbTraffic.textContent = traffic + ' MB';
+    if (pbUptime) pbUptime.textContent = uptime;
+  } catch(e) {}
+}
+
+// ========================================
+// ✦ WTF Factor #12: Animated Theme Switcher (Circular Reveal) ✦
+// ========================================
+function animatedThemeSwitch(newTheme, x, y) {
+  const reveal = document.getElementById('themeReveal');
+  if (!reveal) { setTheme(newTheme); return; }
+  if (x === undefined) x = window.innerWidth / 2;
+  if (y === undefined) y = window.innerHeight / 2;
+  const maxR = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+  reveal.style.left = (x - maxR) + 'px';
+  reveal.style.top = (y - maxR) + 'px';
+  reveal.style.width = (maxR * 2) + 'px';
+  reveal.style.height = (maxR * 2) + 'px';
+  reveal.style.background = newTheme === 'light' ? '#eef1f8' : '#030418';
+  reveal.classList.remove('active');
+  void reveal.offsetWidth; // trigger reflow
+  reveal.classList.add('active');
+  setTimeout(() => { setTheme(newTheme); }, 300);
+  setTimeout(() => { reveal.classList.remove('active'); }, 800);
+}
+
+// Override theme button clicks to use animated switcher
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[onclick*="setTheme"]');
+  if (!btn) return;
+  e.preventDefault();
+  const match = btn.getAttribute('onclick').match(/setTheme\('(\w+)'\)/);
+  if (match) {
+    const newTheme = match[1];
+    if (newTheme !== currentTheme) animatedThemeSwitch(newTheme, e.clientX, e.clientY);
+  }
+});
+
+// ========================================
+// ✦ Keyboard Shortcuts (Ctrl+K already handled) ✦
+// ========================================
+function initKeyboardShortcuts() {
+  document.addEventListener('keydown', (e) => {
+    // Alt+1 to Alt+7 برای ناوبری سریع
+    if (e.altKey && e.key >= '1' && e.key <= '7') {
+      e.preventDefault();
+      const pages = ['dashboard', 'users', 'quota', 'inbound', 'connections', 'settings', 'logs'];
+      navTo(pages[parseInt(e.key) - 1]);
+    }
+    // Ctrl+/ برای toggle player bar
+    if ((e.ctrlKey || e.metaKey) && e.key === '/') {
+      e.preventDefault();
+      togglePlayerBar();
+    }
+  });
+}
+
 // ===== راه‌اندازی اولیه =====
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -2293,11 +3384,30 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadLogs();
   loadQuota();
   
+  // === WTF Factors initialization ===
+  initCmdk();
+  initParticleCursor();
+  initPlayerBar();
+  initDragAndDrop();
+  initServerMap();
+  loadActivityFeed();
+  loadProtocolDonut();
+  initKeyboardShortcuts();
+  
+  // اضافه کردن کارت درخواست notification به تنظیمات
+  addNotifPermissionCard();
+  
+  // رفع placeholder cmdk
+  const cmdkInput = document.getElementById('cmdkInput');
+  if (cmdkInput) cmdkInput.placeholder = (currentLang === 'fa' ? 'جست‌وجو یا دستور... (مثلاً: کاربر جدید، QR، تم)' : 'Search or command...');
+  
   setInterval(() => {
     if (document.getElementById('pg-dashboard').classList.contains('on')) loadDashboard();
     if (document.getElementById('pg-connections').classList.contains('on')) loadConnections();
     if (document.getElementById('pg-users').classList.contains('on')) loadUsers();
     if (document.getElementById('pg-quota').classList.contains('on')) loadQuota();
+    updatePlayerBar();
+    updateSpeedGauge();
   }, 10000);
 });
 </script>
